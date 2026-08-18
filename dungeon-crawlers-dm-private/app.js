@@ -4,6 +4,7 @@
   const STORAGE_KEY = "dungeon_crawlers_dm_chronicle_v1";
   const CURRENT_KEY = "dungeon_crawlers_dm_current_location";
   const seed = window.DM_CAMPAIGN_SEED || { title: "Dungeon Crawlers", locations: [] };
+  const clone = (value) => JSON.parse(JSON.stringify(value));
   let campaign = loadCampaign();
   let currentId = localStorage.getItem(CURRENT_KEY) || campaign.locations[0]?.id || "";
   let filter = "All";
@@ -12,7 +13,6 @@
   let toastTimer;
 
   const $ = (id) => document.getElementById(id);
-  const clone = (value) => JSON.parse(JSON.stringify(value));
   const current = () => campaign.locations.find((location) => location.id === currentId) || campaign.locations[0];
 
   function loadCampaign() {
