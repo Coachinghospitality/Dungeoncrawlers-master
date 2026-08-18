@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10130f">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Dungeon Crawlers — DM Chronicle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">DM</div>
+        <div><strong>Dungeon Crawlers</strong><span>Dungeon Master Chronicle</span></div>
+      </div>
+
+      <div class="library-heading">
+        <div><p>Campaign library</p><strong id="locationCount">0 locations</strong></div>
+        <button class="icon-button" id="newLocationButton" title="Create a new location" aria-label="Create a new location">＋</button>
+      </div>
+
+      <label class="search-field"><span>Search locations</span><input id="locationSearch" type="search" placeholder="Search places, notes or enemies…"></label>
+      <div class="filter-row" id="campaignFilters" aria-label="Filter campaign"></div>
+      <nav class="location-list" id="locationList" aria-label="Campaign locations"></nav>
+
+      <div class="sidebar-tools">
+        <button id="backupButton" type="button">Download backup</button>
+        <label>Restore backup<input id="restoreFile" type="file" accept="application/json"></label>
+      </div>
+    </aside>
+
+    <main class="main-stage">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" aria-label="Open location library">☰</button>
+        <div class="current-place"><span id="locationCampaign">Campaign</span><strong id="locationTitle">Choose a location</strong></div>
+        <div class="top-actions">
+          <select id="locationStatus" aria-label="Location status">
+            <option value="draft">Draft</option><option value="ready">Ready</option>
+            <option value="visited">Visited</option><option value="complete">Complete</option>
+          </select>
+          <button class="button secondary" id="resetEncounterButton" type="button">Reset encounter</button>
+          <button class="button primary" id="editLocationButton" type="button">Edit location</button>
+        </div>
+      </header>
+
+      <div class="content" id="locationView">
+        <section class="location-hero">
+          <div>
+            <p class="eyebrow" id="heroCampaign">Campaign</p>
+            <h1 id="heroTitle">Choose a location</h1>
+            <p class="hero-source" id="heroSource"></p>
+          </div>
+          <div class="location-summary" id="locationSummary"></div>
+        </section>
+
+        <div class="content-grid">
+          <div class="primary-column">
+            <section class="paper-card story-card">
+              <div class="section-title"><span>Read aloud</span><h2>Location story</h2></div>
+              <div class="prose" id="storyText"></div>
+            </section>
+
+            <section class="dark-card">
+              <div class="section-title"><span>Private</span><h2>Dungeon Master notes</h2></div>
+              <div class="prose" id="dmNotesText"></div>
+            </section>
+
+            <section class="dark-card">
+              <div class="section-title split"><div><span>Encounter</span><h2>Enemies &amp; NPCs</h2></div><strong id="enemyProgress"></strong></div>
+              <div class="enemy-grid" id="enemyGrid"></div>
+            </section>
+          </div>
+
+          <aside class="secondary-column">
+            <section class="dark-card sticky-notes">
+              <div class="section-title"><span>Live session</span><h2>Quick notes</h2></div>
+              <textarea id="sessionNotes" rows="9" placeholder="Add improvised details, player choices and consequences here…"></textarea>
+              <p>Saved automatically on this device.</p>
+            </section>
+
+            <section class="dark-card">
+              <div class="section-title"><span>Secrets</span><h2>Discoveries</h2></div>
+              <div class="discovery-list" id="discoveryList"></div>
+            </section>
+
+            <section class="dark-card">
+              <div class="section-title"><span>Rewards</span><h2>Abilities</h2></div>
+              <div class="discovery-list" id="abilityList"></div>
+            </section>
+
+            <section class="route-card">
+              <div class="section-title"><span>Travel</span><h2>Where to next?</h2></div>
+              <div class="route-list" id="routeList"></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+
+      <section class="editor hidden" id="locationEditor" aria-labelledby="editorTitle">
+        <div class="editor-header"><div><p class="eyebrow">Edit mode</p><h1 id="editorTitle">Edit location</h1></div><button class="button secondary" id="cancelEditButton">Cancel</button></div>
+        <div class="editor-grid">
+          <section class="editor-card wide">
+            <label>Location name<input id="editName"></label>
+            <div class="two-fields"><label>Campaign<input id="editCampaign"></label><label>Status<select id="editStatus"><option value="draft">Draft</option><option value="ready">Ready</option><option value="visited">Visited</option><option value="complete">Complete</option></select></label></div>
+            <label>Read-aloud story<textarea id="editStory" rows="9"></textarea></label>
+            <label>Private DM notes<textarea id="editDmNotes" rows="9"></textarea></label>
+          </section>
+
+          <section class="editor-card">
+            <h2>Add enemy or NPC</h2>
+            <label>Name<input id="enemyName"></label>
+            <div class="three-fields"><label>HP<input id="enemyHealth" type="number" min="1" value="1"></label><label>Combat<input id="enemyCombat" type="number" value="0"></label><label>Defence<input id="enemyDefence" type="number" value="0"></label></div>
+            <label>Description<textarea id="enemyDescription" rows="4"></textarea></label>
+            <button class="button secondary" id="addEnemyButton" type="button">Add enemy</button>
+            <div class="compact-list" id="editEnemyList"></div>
+          </section>
+
+          <section class="editor-card">
+            <h2>Add discovery</h2>
+            <label>Item or secret<input id="discoveryName"></label>
+            <label>Description<textarea id="discoveryDescription" rows="3"></textarea></label>
+            <label>Effect or value<input id="discoveryEffect"></label>
+            <button class="button secondary" id="addDiscoveryButton" type="button">Add discovery</button>
+            <div class="compact-list" id="editDiscoveryList"></div>
+          </section>
+
+          <section class="editor-card">
+            <h2>Add ability</h2>
+            <label>Ability name<input id="abilityName"></label>
+            <label>Description<textarea id="abilityDescription" rows="3"></textarea></label>
+            <button class="button secondary" id="addAbilityButton" type="button">Add ability</button>
+            <div class="compact-list" id="editAbilityList"></div>
+          </section>
+
+          <section class="editor-card">
+            <h2>Add route</h2>
+            <label>Button label<input id="routeLabel" placeholder="Onward to Khazard"></label>
+            <label>Connected location<select id="routeTarget"></select></label>
+            <label>Private travel note<textarea id="routeDescription" rows="3"></textarea></label>
+            <button class="button secondary" id="addRouteButton" type="button">Add route</button>
+            <div class="compact-list" id="editRouteList"></div>
+          </section>
+        </div>
+        <div class="editor-save"><button class="button primary" id="saveLocationButton" type="button">Save location changes</button></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="newLocationDialog">
+    <form method="dialog" id="newLocationForm">
+      <p class="eyebrow">Campaign builder</p><h2>Create a new location</h2>
+      <label>Location name<input id="newName" required placeholder="The Sunken Citadel"></label>
+      <label>Campaign<input id="newCampaign" value="New Adventures"></label>
+      <label>Read-aloud introduction<textarea id="newStory" rows="5"></textarea></label>
+      <label>Private DM notes<textarea id="newDmNotes" rows="5"></textarea></label>
+      <div class="dialog-actions"><button class="button secondary" value="cancel">Cancel</button><button class="button primary" id="createLocationButton" value="default">Create location</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="data/campaign-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
