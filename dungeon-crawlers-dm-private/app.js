@@ -108,11 +108,11 @@
   }
 
   function renderDiscoveries(location) {
-    $("discoveryList").innerHTML = location.discoveries.map((item) => `<article class="discovery-item ${escapeHtml(item.state || "hidden")}" data-discovery="${escapeHtml(item.id)}"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description || "")}</p>${item.effect ? `<p><strong>Effect:</strong> ${escapeHtml(item.effect)}</p>` : ""}<button class="state-button" type="button">${escapeHtml(item.state || "hidden")} →</button></article>`).join("") || `<p class="empty">No discoveries recorded.</p>`;
+    $("discoveryList").innerHTML = location.discoveries.map((item) => `<article class="discovery-item ${item.state && item.state !== "hidden" ? escapeHtml(item.state) : "state-hidden"}" data-discovery="${escapeHtml(item.id)}"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description || "")}</p>${item.effect ? `<p><strong>Effect:</strong> ${escapeHtml(item.effect)}</p>` : ""}<button class="state-button" type="button">${escapeHtml(item.state || "hidden")} →</button></article>`).join("") || `<p class="empty">No discoveries recorded.</p>`;
   }
 
   function renderAbilities(location) {
-    $("abilityList").innerHTML = location.abilities.map((ability) => `<article class="discovery-item ${escapeHtml(ability.state || "hidden")}" data-ability="${escapeHtml(ability.id)}"><h3>${escapeHtml(ability.name)}</h3><p>${escapeHtml(ability.description || "")}</p><button class="state-button" type="button">${escapeHtml(ability.state || "hidden")} →</button></article>`).join("") || `<p class="empty">No learnable abilities recorded.</p>`;
+    $("abilityList").innerHTML = location.abilities.map((ability) => `<article class="discovery-item ${ability.state && ability.state !== "hidden" ? escapeHtml(ability.state) : "state-hidden"}" data-ability="${escapeHtml(ability.id)}"><h3>${escapeHtml(ability.name)}</h3><p>${escapeHtml(ability.description || "")}</p><button class="state-button" type="button">${escapeHtml(ability.state || "hidden")} →</button></article>`).join("") || `<p class="empty">No learnable abilities recorded.</p>`;
   }
 
   function renderRoutes(location) {
